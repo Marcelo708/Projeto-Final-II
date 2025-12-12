@@ -1,13 +1,36 @@
---CREATE DATABASE pizzaria_db;
+CREATE DATABASE pizzaria_db;
 
---\c pizzaria_db
+\c pizzaria_db
 
---CREATE TABLE users (
---    id SERIAL PRIMARY KEY,
---    email VARCHAR(255) UNIQUE NOT NULL,
---    password VARCHAR(255) NOT NULL,  -- Armazene hashes, não senhas plain!
---    name VARCHAR(255)
---);
+CREATE TABLE categorias_pizza (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(50) NOT NULL,
+  preco_base DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE tamanhos_pizza (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(30) NOT NULL,
+  multiplicador DECIMAL(5,2) NOT NULL
+);
+
+CREATE TABLE sabores_pizza (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  categoria_id INT REFERENCES categorias_pizza(id)
+);
+
+CREATE TABLE usuarios (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
+  senha VARCHAR(255),
+  role VARCHAR(20) DEFAULT 'cliente'
+);
 
 -- Insira um usuário de teste (use bcrypt para hash na produção!)
---INSERT INTO users (email, password, name) VALUES ('admin@pizzaria.com', 'Banco@123', 'Admin');
+INSERT INTO usuarios (nome, email, senha, role)
+VALUES ('Administrador', 'admin@pizzaria.com', '1234', 'admin');
+
+ALTER TABLE sabores_pizza 
+ADD COLUMN descricao TEXT;
